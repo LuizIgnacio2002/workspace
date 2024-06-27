@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Display API Content</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="mt-5 mb-4 text-center">Document Types</h1>
+    <div id="apiContent" class="row">
+        <!-- API content will be inserted here -->
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: 'https://dolphin-app-lll72.ondigitalocean.app/tiposdocumento/',
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('Authorization', 'Basic ' + btoa('admin:1234'));
+        },
+        success: function(data) {
+            console.log(data); // Print the content of the request to the console
+            data.forEach(function(item) {
+                var card = $('<div class="card col-md-4 mb-4">');
+                var cardBody = $('<div class="card-body">');
+                var nombre = $('<h5 class="card-title">').text(item.nombre);
+                var descripcion = $('<p class="card-text">').text(item.descripcion);
+    
+                cardBody.append(nombre).append(descripcion);
+                card.append(cardBody);
+                $('#apiContent').append(card);
+
+                // Print the content of each item in the template
+                var content = $('<p>').text('Nombre: ' + item.nombre + ', Descripción: ' + item.descripcion);
+                $('#apiContent').append(content);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            $('#apiContent').append('<p>Error loading data</p>');
+        }
+    });
+});
+</script>
+
+</body>
+</html>
